@@ -1,0 +1,17 @@
+logstash:
+  image: logstash:1.4
+  command: logstash -f /cwd/logstash.conf
+  ports:
+    - "2514:2514"
+  volumes:
+    - .:/cwd
+app:
+  image: busybox
+  log_driver: "syslog"
+  log_opt: 
+    syslog-address: "tcp://localhost:2514"
+    syslog-tag: "test.foo"
+  command: top
+  volumes_from:
+    - logstash
+    
